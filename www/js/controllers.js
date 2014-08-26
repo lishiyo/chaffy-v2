@@ -396,7 +396,8 @@ $scope.onRefresh = function() {
   connieDrag= false;
 })
 
-.controller('LaunchCtrl', function($scope, $location, $rootScope, $timeout) {
+
+.controller('LaunchCtrl', function($scope, $location, $rootScope, $timeout, $q) {
 
   connieDrag=true;
 
@@ -560,7 +561,7 @@ auth.login('anonymous', {
 
 
 /** map **/  
-
+/**
 $scope.map = {
     center: {
       latitude: userPosition[0],
@@ -582,12 +583,12 @@ $scope.map = {
         $scope.map.center = $scope.circle.center;
       }
       **/
-    }
-};
+//    }
+//};
 
-$scope.map.isReady = false;
+// $scope.map.isReady = false;
 
-
+/**
 $scope.circle = {
   center: {
       latitude: userPosition[0],
@@ -612,18 +613,18 @@ $scope.circle = {
                      console.log(marker.position.lng());
                      **/
                     
-                     var lat = $scope.circle.center.latitude;
-                     var lon = $scope.circle.center.longitude;
+                  //   var lat = $scope.circle.center.latitude;
+                  //   var lon = $scope.circle.center.longitude;
 
                      /**
                      userPosition[0] = parseFloat(lat);
                      userPosition[1] = parseFloat(lon);
                      **/
-                     localStorage.setItem('lat', lat);
-                     localStorage.setItem('lon', lon);
+                 //    localStorage.setItem('lat', lat);
+                 //    localStorage.setItem('lon', lon);
 
                     //$scope.map.center = $scope.circle.center;
-
+/**
                   });
                },
                radius_changed: function() {
@@ -636,6 +637,118 @@ $scope.circle = {
 $scope.circle.isReady = false;
 $scope.map.isReady = true;
 $scope.circle.isReady = true;
+**/
+
+   var geocoder;
+   var markers = [];
+   $scope.circle = null;
+
+function initialize() {
+    var mapOpts = {
+        zoom: 11,
+        zoomControl: true,
+        zoomControlOptions: {
+          style: google.maps.ZoomControlStyle.LARGE,
+          position: google.maps.ControlPosition.LEFT_CENTER
+        },
+        //center: new google.maps.LatLng(40.777225004040009, -73.95218489597806),
+        center: new google.maps.LatLng(userPosition[0], userPosition[1]),
+        panControl: true,
+        panControlOptions: {
+          position: google.maps.ControlPosition.TOP_RIGHT
+        },
+        scaleControl: true,
+        overviewMapControl: true,
+        overviewMapControlOptions: {
+          opened: true,
+          position: google.maps.ControlPosition.RIGHT_BOTTOM
+        }
+    };
+    
+    var circleOpts = {
+      //map: $scope.map,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#fff',
+      fillOpacity: 0.35,
+      //center: new google.maps.LatLng(40.777225004040009, -73.95218489597806),  
+      center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
+      radius: 3000,
+      editable: true,
+      draggable: true
+    };
+
+$scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOpts);
+   
+setTimeout(function(){
+
+      if ($scope.map!=null) {
+        
+        $scope.circle = new google.maps.Circle(circleOpts); 
+        $scope.circle.setMap($scope.map);
+        
+        console.log("circle initialized!");
+
+
+google.maps.event.addListener($scope.circle, 'radius_changed', function() {
+  var newRadius = $scope.circle.getRadius();
+  localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+  console.log("\n new radius! " + localStorage.getItem('localNewRadius') + " miles");
+});
+
+google.maps.event.addListener($scope.circle, 'dragend', function() {
+  var lat = $scope.circle.getCenter().lat();
+  var lon = $scope.circle.getCenter().lng();
+  localStorage.setItem('lat', lat);
+  localStorage.setItem('lon', lon);
+  
+  console.log("\n lat: " + lat + " and lon: " + lon);
+});
+        startGeocomplete();
+  } //map not null
+
+}, 100);
+
+
+// geocomplete
+function startGeocomplete () {
+
+   $("input#address").geocomplete({
+      map: $scope.map
+     }).bind("geocode:result", function(event, result){
+    
+     $scope.map.setCenter(result.geometry.location);
+     $scope.circle.setCenter(result.geometry.location);
+     //$scope.circle.setRadius(400);
+     $scope.map.fitBounds($scope.circle.getBounds());
+
+     var marker = new google.maps.Marker({
+          map: $scope.map,
+          position: result.geometry.location
+      });
+      markers.push(marker);
+      
+      google.maps.event.addListener(marker, 'dblclick', function(){
+       console.log("clicked markers! " + markers);
+       this.setMap(null);      
+      });
+   });
+
+}
+
+ $("input#address").keyup(function (e) {
+    if (e.keyCode == 13) {
+       $("input#address").trigger("geocode");
+    }
+  });
+
+
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);    
+      
+  
 
 })
 
