@@ -1,5 +1,6 @@
 <head>
   <link href="css/launch.css" rel="stylesheet">
+<script src='../js/markerwithlabel_packed.js'></script>
 </head>
 
 <header class="bar bar-header bar-calm">
@@ -81,7 +82,7 @@
   <p></p>
   <p></p>
   
-  <div id="map-canvas" geoFallbackCenter="[40.777225004040009, -73.95218489597806]">
+  <div ng-init="initialize()" id="map-canvas" geoFallbackCenter="[40.777225004040009, -73.95218489597806]">
   <!--
      <shape id="myCircle" name="circle" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" 
      center="{{center()}}" radius="3000" editable="true" fillColor: '#fff'></shape>

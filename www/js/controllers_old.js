@@ -101,6 +101,7 @@ if (localStorage.getItem('localUserID') != null) {
 
   connieDrag= false;
   console.log("\n\n $scope.map center is " + userPosition[0] + ", " + userPosition[1]);
+  console.log("\n\n $scope.circle " + userPosition[0] + ", " + userPosition[1]);
 
   // set localNewRadius whenever switch view to MainCtrl
   // localStorage.setItem('localNewRadius', (parseFloat(angular.element(document.getElementById('firstElem')).scope().circle.radius) / 1609));
