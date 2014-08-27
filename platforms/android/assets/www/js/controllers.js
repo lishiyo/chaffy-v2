@@ -372,8 +372,8 @@ $scope.roomRef.push().setWithPriority({
 this.newMessage = "";
 
 setTimeout(function(){
+  $('#mainInput').trigger('autosize.destroy');
   $('#mainInput').blur();
-  //$('#mainInput').off('focus');
 }, 10);
 
 // run service CheckUserHasRoom, which then runs UserAddRoom if hasRoom is false
@@ -392,8 +392,8 @@ $scope.onRefresh = function() {
 };
 
 
-$(document).ready(function(){
-    $('textarea').autosize();   
+$('#mainInput').focus(function(){
+    $(this).autosize();   
 });
 
 
