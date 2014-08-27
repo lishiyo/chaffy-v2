@@ -1,5 +1,6 @@
 <head>
   <link href="css/launch.css" rel="stylesheet">
+<script src='../js/markerwithlabel_packed.js'></script>
 </head>
 
 <header class="bar bar-header bar-calm">
@@ -9,11 +10,12 @@
 
 <content has-header="true" id="firstElem">        
   <!-- <form ng-submit="doNothing()"> form ui-keypress="{13:'findChats()'}" -->
-    <div class="list list-inset">
-    <div class="form-bar" id="username-bar">
+<div class="list list-inset">
+
+<div class="form-bar" id="username-bar">
     <input type="text" ng-model="userPro.username" class="convoInput" id="userAlias" placeholder="my alias" ng-keypress="blurOnEnter($event)">
-    </div>
-    <div class="form-bar">
+</div>
+<div class="form-bar">
       <label class="item item-radio bar-gender-item" id="radio-male">
         <!--
         <span class="input-label">Gender</span>      
@@ -28,11 +30,11 @@
         <!--<i class="radio-icon ion-checkmark"> data-ng-value="0"</i>-->
       </label>
 
-<label class="item item-radio bar-gender-item" id="radio-fem">
+  <label class="item item-radio bar-gender-item" id="radio-fem">
       <input type="checkbox" name="userGender" data-ng-model="userPro.gender" data-ng-true-value="female" data-ng-false-value="false" value="female" data-ng-change="blurKeyboard()"/>
         <div class="item-content">female
         </div>
-</label>     
+  </label>     
 <!--
 <label class="item item-radio bar-gender-item" id="radio-sec">
       <input type="radio" name="userGender" data-ng-model="userGender" data-ng-value="2">
@@ -74,14 +76,29 @@
                       
         <input type="text" placeholder="circle radius" data-ng-model="newRoomDescription" class="convoInput">
         -->
+
+
+  <input id="address" type="text" ng-keypress="blurOnEnterAddress($event)">
+  <p></p>
+  <p></p>
+  
+  <div id="map-canvas" >
+  <!--
+     <shape id="myCircle" name="circle" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" geoFallbackCenter="[40.777225004040009, -73.95218489597806]" 
+     center="{{center()}}" radius="3000" editable="true" fillColor: '#fff'></shape>
+     -->
+  </div>
+  
+<!--
 <div id="map-container" ng-click="blurKeyboard()">
 <div ng-if="map.isReady && circle.isReady">
         <google-map center="map.center" zoom="map.zoom" draggable="true" dragging="map.dragging" id="map_canvas" events="map.events"> 
         <circle center="circle.center" visible="true" radius="circle.radius" fill="circle.fill" draggable="true" editable="true" stroke="circle.stroke" events="circle.events"></circle>
         </google-map>
-      <!--</label>-->
 </div>
 </div>
+-->
+
 
     </div>
     <div class="padding" style="padding-top:0px;">

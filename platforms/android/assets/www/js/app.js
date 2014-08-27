@@ -15,11 +15,11 @@ document.addEventListener("resume", onDeviceReady, false);
 
    
     function onDeviceReady() {
-
+      
       setTimeout(function(){
       navigator.splashscreen.hide();
 
-    }, 2000);
+      }, 2000);
 
       locErrorShown=false;
 
@@ -64,8 +64,10 @@ catch(errrr){
    function onSuccess(position) {
 
       userPosition=[position.coords.latitude, position.coords.longitude];
-      localStorage.setItem("lat", position.coords.latitude );
+      localStorage.setItem("lat", position.coords.latitude);
       localStorage.setItem("lon", position.coords.longitude);
+      //alert("device ready! init at: " + userPosition[0] + " " + userPosition[1]);
+      
 // mike's not crazy
 
 /**
@@ -103,6 +105,7 @@ catch(errrr){
     
     function onError(error) {
     if(locErrorShown==false){
+      alert("couldn't find location!");
       locErrorShown=true;
                navigator.notification.alert(
         'There was a problem getting your location. We are defaulting you to the Upper East Side of Manhattan in New York City, USA. \n To change this, please visit your phone\'s settings. Find this app in Location, and turn it on.',  // message
@@ -177,7 +180,7 @@ function userAgreed(){
 }
 
 // Chaffy's main module
-angular.module('chatRoom', ['ionic', 'ngRoute', 'ngAnimate', 'firebase', 'chatRoom.services', 'chatRoom.controllers', 'google-maps', 'chatRoom.filters', 'ngTouch', 'ionic.contrib.ui.cards'])
+angular.module('chatRoom', ['ionic', 'ngRoute', 'ngAnimate', 'firebase', 'chatRoom.services', 'chatRoom.controllers', 'chatRoom.filters', 'ngTouch', 'ionic.contrib.ui.cards', 'ngMap'])
 
 .config(function ($compileProvider){
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);

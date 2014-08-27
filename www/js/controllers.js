@@ -391,6 +391,12 @@ $scope.onRefresh = function() {
     }, 1000);
 };
 
+
+$(document).ready(function(){
+    $('textarea').autosize();   
+});
+
+
 }) // RoomCtrl
 
 .controller('AboutCtrl', function($scope) {
@@ -434,6 +440,7 @@ $scope.blurKeyboard = function() {
 $scope.blurOnEnter = function(keyEvent) {
   if (keyEvent.which === 13) {
     $('#userAlias').blur();
+    $('#address').blur();
   }
 }
 
@@ -647,12 +654,31 @@ $scope.map.isReady = true;
 $scope.circle.isReady = true;
 **/
 
-   var geocoder;
+document.addEventListener('deviceready', onDeviceReady, false);
+
+function onDeviceReady() {
+   navigator.geolocation.getCurrentPosition(onSuccess, onError);
+ }
+
+function onSuccess(position) {
+  userPosition=[position.coords.latitude, position.coords.longitude];
+  //localStorage.setItem("lat", position.coords.latitude);
+  //localStorage.setItem("lon", position.coords.longitude);
+  initializeMap();
+}
+
+function onError(error) {
+  userPosition =[40.777225004040009, -73.95218489597806];
+  alert("geolocation failed! defaulting to: " + userPosition[0] + " " + userPosition[1]);
+  initializeMap();
+}
+   
+function initializeMap() {
+  var geocoder;
    var markers = [];
    $scope.circle = null;
-   $scope.map = "";
-
-function initialize() {
+   $scope.map = null;
+  
     var mapOpts = {
         zoom: 12,
         zoomControl: true,
@@ -660,7 +686,6 @@ function initialize() {
           style: google.maps.ZoomControlStyle.LARGE,
           position: google.maps.ControlPosition.LEFT_CENTER
         },
-        //center: new google.maps.LatLng(40.777225004040009, -73.95218489597806),
         center: new google.maps.LatLng(userPosition[0], userPosition[1]),
         panControl: true,
         panControlOptions: {
@@ -681,7 +706,6 @@ function initialize() {
       strokeWeight: 2,
       fillColor: '#fff',
       fillOpacity: 0.35,
-      //center: new google.maps.LatLng(40.777225004040009, -73.95218489597806),  
       center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
       radius: 3000,
       editable: true,
@@ -692,7 +716,7 @@ $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOpts)
    
 $timeout(function(){
 
-      if ($scope.map!="") {
+      if ($scope.map!=null) {
         //google.maps.event.trigger($scope.map, "resize");
 
         $scope.circle = new google.maps.Circle(circleOpts); 
@@ -702,6 +726,7 @@ $timeout(function(){
         localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
         var lat = $scope.circle.getCenter().lat();
         var lon = $scope.circle.getCenter().lng();
+        //should be userposition[0] and [1]
         localStorage.setItem('lat', lat);
         localStorage.setItem('lon', lon);
 
@@ -724,7 +749,7 @@ google.maps.event.addListener($scope.circle, 'dragend', function() {
         startGeocomplete();
   } //map not null
 
-}, 10);
+}, 10); //timeout
 
 
 // geocomplete
@@ -777,26 +802,36 @@ function startGeocomplete () {
       }, 10);
       
       
-   });
+   }); //bind
 
+} //startGeocomplete
+
+$scope.blurOnEnterAddress = function(keyEvent) {
+  if (keyEvent.which === 13) {
+    $("input#address").trigger("geocode");
+    $("input#address").blur();
+  }
 }
-
+/**
  $("input#address").keyup(function (e) {
     if (e.keyCode == 13) {
        $("input#address").trigger("geocode");
+       $("input#address").blur();
     }
   });
-
+**/
  
 
-}
+} //initializeMap
 
 
 //google.maps.event.addDomListener(window, 'load', initialize);
+
+/**
 $timeout(function(){
    initialize();
- }, 100);
-
+ }, 1000);
+**/
 })
 
 .controller('CardsCtrl', function($scope, $ionicSwipeCardDelegate, $firebase, DistanceCalc) {

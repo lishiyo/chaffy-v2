@@ -101,7 +101,9 @@ if (localStorage.getItem('localUserID') != null) {
 
   connieDrag= false;
   // real user position
-  //console.log("\n\n $scope.map center is " + userPosition[0] + ", " + userPosition[1]);
+  console.log("\n\n $scope.map center is " + userPosition[0] + ", " + userPosition[1]);
+  console.log("\n\n $scope.circle radius: " + localStorage.getItem('localNewRadius'));
+  console.log("\n\n $scope.circle radius lat: " + localStorage.getItem('lat') + " " + localStorage.getItem('lon'));
 
   // set localNewRadius whenever switch view to MainCtrl - below doesn't work, however
   // localStorage.setItem('localNewRadius', (parseFloat(angular.element(document.getElementById('firstElem')).scope().circle.radius) / 1609));
@@ -209,7 +211,7 @@ var obj = sync.$asArray();
 
 obj.$loaded().then(function(){
 
-  console.log(Object.keys(obj[obj.length-1]));
+  //console.log(Object.keys(obj[obj.length-1]));
 
   var firstOfLast = obj[0];
   var lastIndex = (obj.length - 1);
@@ -389,12 +391,19 @@ $scope.onRefresh = function() {
     }, 1000);
 };
 
+
+$(document).ready(function(){
+    $('textarea').autosize();   
+});
+
+
 }) // RoomCtrl
 
 .controller('AboutCtrl', function($scope) {
 
   connieDrag= false;
 })
+
 
 .controller('LaunchCtrl', function($scope, $location, $rootScope, $timeout) {
 
@@ -431,6 +440,7 @@ $scope.blurKeyboard = function() {
 $scope.blurOnEnter = function(keyEvent) {
   if (keyEvent.which === 13) {
     $('#userAlias').blur();
+    $('#address').blur();
   }
 }
 
@@ -460,13 +470,19 @@ $('#userAlias').keydown(function(event) {
    //for users who don't input a name
 
 // set localNewRadius when user clicks GO
-    var newRadius = parseFloat(($scope.circle.radius) / 1609);
-    localStorage.setItem('localNewRadius', newRadius);
+    //var newRadius = parseFloat(($scope.circle.radius) / 1609);
+    //localStorage.setItem('localNewRadius', newRadius);
+
+    var newRadius = $scope.circle.getRadius();
+    localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+
 // console.log("\n\n\n\n findChats says " + localStorage.getItem('localNewRadius'));
 
 // reset localStorage lat, lon and userPosition to circle center on GO
-    var lat = $scope.circle.center.latitude;
-    var lon = $scope.circle.center.longitude;
+
+  var lat = $scope.circle.getCenter().lat();
+  var lon = $scope.circle.getCenter().lng();
+
    // userPosition[0] = parseFloat(lat);
    // userPosition[1] = parseFloat(lon);
     localStorage.setItem('lat', lat);
@@ -560,7 +576,7 @@ auth.login('anonymous', {
 
 
 /** map **/  
-
+/**
 $scope.map = {
     center: {
       latitude: userPosition[0],
@@ -582,12 +598,12 @@ $scope.map = {
         $scope.map.center = $scope.circle.center;
       }
       **/
-    }
-};
+//    }
+//};
 
-$scope.map.isReady = false;
+// $scope.map.isReady = false;
 
-
+/**
 $scope.circle = {
   center: {
       latitude: userPosition[0],
@@ -612,18 +628,18 @@ $scope.circle = {
                      console.log(marker.position.lng());
                      **/
                     
-                     var lat = $scope.circle.center.latitude;
-                     var lon = $scope.circle.center.longitude;
+                  //   var lat = $scope.circle.center.latitude;
+                  //   var lon = $scope.circle.center.longitude;
 
                      /**
                      userPosition[0] = parseFloat(lat);
                      userPosition[1] = parseFloat(lon);
                      **/
-                     localStorage.setItem('lat', lat);
-                     localStorage.setItem('lon', lon);
+                 //    localStorage.setItem('lat', lat);
+                 //    localStorage.setItem('lon', lon);
 
                     //$scope.map.center = $scope.circle.center;
-
+/**
                   });
                },
                radius_changed: function() {
@@ -636,7 +652,186 @@ $scope.circle = {
 $scope.circle.isReady = false;
 $scope.map.isReady = true;
 $scope.circle.isReady = true;
+**/
 
+document.addEventListener('deviceready', onDeviceReady, false);
+
+function onDeviceReady() {
+   navigator.geolocation.getCurrentPosition(onSuccess, onError);
+ }
+
+function onSuccess(position) {
+  userPosition=[position.coords.latitude, position.coords.longitude];
+  //localStorage.setItem("lat", position.coords.latitude);
+  //localStorage.setItem("lon", position.coords.longitude);
+  initializeMap();
+}
+
+function onError(error) {
+  userPosition =[40.777225004040009, -73.95218489597806];
+  alert("geolocation failed! defaulting to: " + userPosition[0] + " " + userPosition[1]);
+  initializeMap();
+}
+   
+function initializeMap() {
+  var geocoder;
+   var markers = [];
+   $scope.circle = null;
+   $scope.map = null;
+  
+    var mapOpts = {
+        zoom: 12,
+        zoomControl: true,
+        zoomControlOptions: {
+          style: google.maps.ZoomControlStyle.LARGE,
+          position: google.maps.ControlPosition.LEFT_CENTER
+        },
+        center: new google.maps.LatLng(userPosition[0], userPosition[1]),
+        panControl: true,
+        panControlOptions: {
+          position: google.maps.ControlPosition.TOP_RIGHT
+        },
+        scaleControl: true,
+        overviewMapControl: true,
+        overviewMapControlOptions: {
+          opened: true,
+          position: google.maps.ControlPosition.RIGHT_BOTTOM
+        }
+    };
+    
+    var circleOpts = {
+      //map: $scope.map,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#fff',
+      fillOpacity: 0.35,
+      center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
+      radius: 3000,
+      editable: true,
+      draggable: true
+    };
+
+$scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOpts);
+   
+$timeout(function(){
+
+      if ($scope.map!=null) {
+        //google.maps.event.trigger($scope.map, "resize");
+
+        $scope.circle = new google.maps.Circle(circleOpts); 
+        $scope.circle.setMap($scope.map);
+        
+        var newRadius = $scope.circle.getRadius();
+        localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+        var lat = $scope.circle.getCenter().lat();
+        var lon = $scope.circle.getCenter().lng();
+        //should be userposition[0] and [1]
+        localStorage.setItem('lat', lat);
+        localStorage.setItem('lon', lon);
+
+google.maps.event.addListener($scope.circle, 'radius_changed', function() {
+  newRadius = $scope.circle.getRadius();
+  $scope.circle.radius = newRadius;
+  localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+
+  //console.log("\n new radius! " + $scope.circle.radius + " feet");
+});
+
+google.maps.event.addListener($scope.circle, 'dragend', function() {
+  lat = $scope.circle.getCenter().lat();
+  lon = $scope.circle.getCenter().lng();
+  localStorage.setItem('lat', lat);
+  localStorage.setItem('lon', lon);
+  
+ // console.log("\n lat: " + localStorage.getItem('lat') + " and lon: " + localStorage.getItem('lon'));
+});
+        startGeocomplete();
+  } //map not null
+
+}, 10); //timeout
+
+
+// geocomplete
+function startGeocomplete () {
+
+   $("input#address").geocomplete({
+      map: $scope.map
+     }).bind("geocode:result", function(event, result){
+    
+     $scope.map.setCenter(result.geometry.location);
+     $scope.circle.setCenter(result.geometry.location);
+     $scope.map.fitBounds($scope.circle.getBounds());
+
+//store new lat, lon, and radius even without pressing findChats
+     lat = $scope.circle.getCenter().lat();
+     lon = $scope.circle.getCenter().lng();
+     localStorage.setItem('lat', lat);
+     localStorage.setItem('lon', lon);
+     newRadius = $scope.circle.getRadius();
+     $scope.circle.radius = newRadius;
+     localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+  
+
+     var marker = new google.maps.Marker({
+          map: $scope.map,
+          title: result.formatted_address,
+          position: result.geometry.location
+          /**
+          labelContent: result.formatted_address,
+          labelAnchor: new google.maps.Point(22, 0),
+          labelClass: "labels", // the CSS class for the label
+          labelStyle: {opacity: 0.75}
+          **/
+      });
+
+     var iw = new google.maps.InfoWindow({
+       content: marker.title
+     });
+     google.maps.event.addListener(marker, "click", function (e) { iw.open($scope.map, this); });
+
+    markers.push(marker);
+
+      $timeout(function() {
+        google.maps.event.addListener(marker, 'dblclick', function(){
+           // console.log("clicked markers! " + marker.title);
+            this.setMap(null);    
+                
+        });
+
+      }, 10);
+      
+      
+   }); //bind
+
+} //startGeocomplete
+
+$scope.blurOnEnterAddress = function(keyEvent) {
+  if (keyEvent.which === 13) {
+    $("input#address").trigger("geocode");
+    $("input#address").blur();
+  }
+}
+/**
+ $("input#address").keyup(function (e) {
+    if (e.keyCode == 13) {
+       $("input#address").trigger("geocode");
+       $("input#address").blur();
+    }
+  });
+**/
+ 
+
+} //initializeMap
+
+
+//google.maps.event.addDomListener(window, 'load', initialize);
+
+/**
+$timeout(function(){
+   initialize();
+ }, 1000);
+**/
 })
 
 .controller('CardsCtrl', function($scope, $ionicSwipeCardDelegate, $firebase, DistanceCalc) {

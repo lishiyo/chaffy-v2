@@ -1,13 +1,15 @@
+
 <nav-bar animation="nav-title-slide-ios7" class="nav-title-slide-ios7" type="bar-calm" back-button-type="button-icon" back-button-icon="icon ion-arrow-left-c">
 </nav-bar>
 
 <nav-page title="{{room.title}}">
 
 <style>
+/**
   .has-footer{
     bottom: 100px !important;
   }
-
+**/
 </style>
 
 
@@ -49,13 +51,18 @@
 
 
   <div class="bar bar-footer bar-stable" id="bar-footer-message-box">
-    <div class="list list-inset">
+    <!--<div class="list list-inset">-->
+    <div class="list" id="msgBar">
       <form ui-keypress="{13:'submitAddMessage($event)'}" data-ng-submit="submitAddMessage()" >
-        <label class="item item-input" id="msgLabel">
-          <input type="text" placeholder="your message ..." data-ng-model="newMessage" id="mainInput">
-          <button class="button button-positive">Send</button>
-        </label>
+      <div id="leftTextarea">
+        <!--<label class="item item-input" id="msgLabel">-->
+          <textarea placeholder="your message ..." data-ng-model="newMessage" id="mainInput" row="1" style="padding-bottom:0px;"></textarea>  
+          </div>     
+        <!--</label>-->
+        <button class="button button-positive" id="sendBtn">Send</button>
       </form>
-    </div>
+    </div>  
+    <!--</div>-->
+    
   </div>
 </nav-page>

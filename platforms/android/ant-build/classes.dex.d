@@ -30,6 +30,7 @@ c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\cl
 c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\classes\org\apache\cordova\dialogs\Notification.class \
 c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\classes\org\apache\cordova\networkinformation\NetworkManager$1.class \
 c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\classes\org\apache\cordova\networkinformation\NetworkManager.class \
+c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\classes\org\apache\cordova\splashscreen\SplashScreen.class \
 c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\classes\talk2\talk2\BuildConfig.class \
 c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\classes\talk2\talk2\R$attr.class \
 c:\Users\Shiyo\Google Drive\(CODE)\(SEEDS)\CHAFFY\platforms\android\ant-build\classes\talk2\talk2\R$drawable.class \

@@ -78,13 +78,13 @@
         -->
 
 
-  <input id="address" type="text">
+  <input id="address" type="text" ng-keypress="blurOnEnterAddress($event)">
   <p></p>
   <p></p>
   
-  <div ng-init="initialize()" id="map-canvas" geoFallbackCenter="[40.777225004040009, -73.95218489597806]">
+  <div id="map-canvas" >
   <!--
-     <shape id="myCircle" name="circle" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" 
+     <shape id="myCircle" name="circle" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" geoFallbackCenter="[40.777225004040009, -73.95218489597806]" 
      center="{{center()}}" radius="3000" editable="true" fillColor: '#fff'></shape>
      -->
   </div>

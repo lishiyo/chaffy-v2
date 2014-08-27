@@ -110,6 +110,46 @@
   border-radius: 5px;
 }
 
+textarea#mainInput {
+  background-color: white !important;
+  border: 0px solid white;
+  border-radius: 5px;
+  padding: 2px 5px;
+  display: inline-block;
+}
+
+#leftTextarea{
+  width: 80%;
+  display: inline-block;
+  float:left;
+}
+
+div#mainScroll.scroll-content{
+  margin-bottom: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+div#msgBar.list{ 
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  padding: 5px;
+  margin-bottom: 0px;
+}
+
+div#bar-footer-message-box{
+  padding:0px;
+  margin-top: 0px;
+}
+
+#sendBtn {
+  float: right;
+  width: 16%;
+  height: 40px;
+  margin-top: 1px;
+  margin-right: 10px;
+}
+
 input.convoInput{
   background-color: #EBE8E3;
   border-radius: 3px;
