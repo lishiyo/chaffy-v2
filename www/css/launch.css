@@ -25,7 +25,7 @@
 	margin: 0 auto;
 }
 
-input#address {
+input#google_places_ac {
 	background-color: rgba(0,0,0,0.1);
 	width: 99%;
 	padding: 2px 10px;

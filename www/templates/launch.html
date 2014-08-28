@@ -1,6 +1,6 @@
 <head>
   <link href="css/launch.css" rel="stylesheet">
-<script src='../js/markerwithlabel_packed.js'></script>
+  <script src='../js/markerwithlabel_packed.js'></script>
 </head>
 
 <header class="bar bar-header bar-calm">
@@ -77,9 +77,11 @@
         <input type="text" placeholder="circle radius" data-ng-model="newRoomDescription" class="convoInput">
         -->
 
+<!--
+  <input id="address" type="text" ng-keypress="blurOnEnterAddress($event)" ng-model="address">
+  -->
+<google-places location=location ng-keypress="blurOnEnterAddress($event)" ng-model="address"></google-places>
 
-  <input id="address" type="text" ng-keypress="blurOnEnterAddress($event)">
-  
   <div class="padding" style="padding-top:0px;">
       <button class="button button-full button-positive" ng-click="findChats()" id="launch-go">find chats</button>
   </div>

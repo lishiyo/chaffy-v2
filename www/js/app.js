@@ -1,5 +1,5 @@
 //global default user position
-//userPosition =[40.777225004040009, -73.95218489597806];
+userPosition =[40.777225004040009, -73.95218489597806];
 
 //active watch...
 var activeWatch;
@@ -243,7 +243,9 @@ angular.module('chatRoom', ['ionic', 'ngRoute', 'ngAnimate', 'firebase', 'chatRo
       });
     }
   }
-});
+})
+
+
 
 /**
 .service('getLoc', function () {
