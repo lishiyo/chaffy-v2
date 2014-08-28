@@ -1,0 +1,77 @@
+<head>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<link href="css/cards.css" rel="stylesheet">
+
+</head>
+
+<!--
+<nav-page id="app-page">
+  <header class="bar bar-header bar-calm">
+    <button class="button button-icon" ng-click="goToHome()"><i class="icon ion-home"></i></button>
+    <h1 class="title">Chaffy</h1>
+  </header>
+  <content has-header="true" padding="true">
+    <h3>chaffy is<br> the anonymous mobile chatroom</h3>
+    -->
+<body ng-app="chatRoom" animation="slide-left-right-ios7" no-scroll>
+    <pane ng-controller="CardsCtrl">
+     <!-- <header-bar type="bar-transparent" title="'Help out'"></header-bar> -->
+
+<header class="bar bar-header bar-calm">
+    <button class="button button-icon" ng-click="goToHome()"><i class="icon ion-home"></i></button>
+    <h1 class="title">Chaffy</h1>
+  </header>
+
+      <swipe-cards>
+      
+        <swipe-card on-swipe="cardSwiped()" id="start-card">
+        <p> <span style="font-size:3.5rem; color:yellow">swipe down</span><br />to find chats 'round<br />
+         <span style="font-size:3.0rem; opacity:1.0; font-family: 'Lato'; line-height:70px; color:yellow;">{{ radiusInMi }}</span>  mi.<br />
+         </p>
+         <!--
+          <span>
+          <i class="icon ion-android-contact" style="font-size: 1.3rem; color: #43cee6;"></i>
+        </span>
+        -->
+        </swipe-card>
+
+        <swipe-card on-swipe="goToIt('#/launch');" ng-show="noCards()" ng-cloak id="start-card" ng-click="goToIt('#/launch');">
+        <p>
+        <span style="font-size:2.8rem; opacity:1.0; color:yellow;">no chats found!</span> <br>
+        <span style="font-size: 1.5rem;">try looking in another area :) </span>
+         </p>
+         <!--
+          <span>
+          <i class="icon ion-android-contact" style="font-size: 1.3rem; color: #43cee6;"></i>
+        </span>
+        -->
+        </swipe-card>
+
+        <swipe-card ng-repeat="card in chatCards" on-destroy="cardDestroyed($index)" on-swipe="cardSwiped($index)">
+          <div ng-controller="CardCtrl">
+            <div class="title">
+              {{actualDistanceFromHere(card)}} mi. away
+            </div>
+            <!--
+            <div class="image">
+              <img ng-src="{{card.image}}">
+            </div>
+            -->
+            <div class="image-custom">
+            	<div id="card_desc">
+            		<span>{{card.title}}</span>
+            	<br><br>
+            		<p>{{card.description}}</p>
+            	</div>
+            </div>
+            <div class="button-bar">
+              <button class="button button-clear button-positive" ng-click="goToIt('#/rooms/{{card.id}}');">join chat</button>
+              <!--
+              <button class="button button-clear button-negative" ng-click="goAway()">SKIP</button>
+              -->
+            </div>
+          </div>
+        </swipe-card>
+      </swipe-cards>
+    </pane>
+  </body>

@@ -400,7 +400,6 @@ $('#mainInput').focus(function(){
 }) // RoomCtrl
 
 .controller('AboutCtrl', function($scope) {
-
   connieDrag= false;
 })
 
@@ -656,30 +655,37 @@ $scope.circle.isReady = true;
 
 document.addEventListener('deviceready', onDeviceReady, false);
 
-function onDeviceReady() {
+$scope.map=null;
+$scope.circle=null;
+$scope.loadedMap = false;
+
+function onDeviceReady() { 
    navigator.geolocation.getCurrentPosition(onSuccess, onError);
  }
 
 function onSuccess(position) {
   userPosition=[position.coords.latitude, position.coords.longitude];
-  //localStorage.setItem("lat", position.coords.latitude);
-  //localStorage.setItem("lon", position.coords.longitude);
+  localStorage.setItem("lat", userPosition[0]);
+  localStorage.setItem("lon", userPosition[1]);
+
   initializeMap();
 }
 
 function onError(error) {
-  userPosition =[40.777225004040009, -73.95218489597806];
-  alert("geolocation failed! defaulting to: " + userPosition[0] + " " + userPosition[1]);
+  userPosition = [40.777225004040009, -73.95218489597806];
+  localStorage.setItem("lat", userPosition[0]);
+  localStorage.setItem("lon", userPosition[1]);
+
+  alert("Oops, we couldn't get your location! (Try visiting your phone's settings, find this app in Location, and turn it on.)\n Right now we'll default you to the Upper East Side of Manhattan in NYC, USA.");
+
   initializeMap();
 }
-   
-function initializeMap() {
-  var geocoder;
-   var markers = [];
-   $scope.circle = null;
-   $scope.map = null;
   
-    var mapOpts = {
+function initializeMap() {
+  //var geocoder;
+  var markers = [];
+   
+  var mapOpts = {
         zoom: 12,
         zoomControl: true,
         zoomControlOptions: {
@@ -699,37 +705,83 @@ function initializeMap() {
         }
     };
     
-    var circleOpts = {
-      //map: $scope.map,
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#fff',
-      fillOpacity: 0.35,
-      center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
-      radius: 3000,
-      editable: true,
-      draggable: true
-    };
-
+// instantiate map, hide the loading paragraph - mapLoaded now true!
 $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOpts);
-   
-$timeout(function(){
 
-      if ($scope.map!=null) {
-        //google.maps.event.trigger($scope.map, "resize");
+// Try HTML5 geolocation
+/**
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function (position) {
+    userPosition = [position.coords.latitude, position.coords.longitude];
+    pos = new google.maps.LatLng(userPosition[0], userPosition[1]);
+    localStorage.setItem("lat", userPosition[0]);
+    localStorage.setItem("lon", userPosition[1]);
+
+    $scope.map.setCenter(pos); 
+
+    startCircle();
+  }, // error getting current position
+  function() {
+    userPosition = [40.777225004040009, -73.95218489597806];
+    pos = new google.maps.LatLng(userPosition[0], userPosition[1]); 
+    localStorage.setItem("lat", userPosition[0]);
+    localStorage.setItem("lon", userPosition[1]);
+
+    $scope.map.setCenter(pos);
+    alert("Your device supports geolocation, but you have it disabled; please go to your app settings and under Chaffy, enable location. We'll default you to the UWS of NYC, USA.");
+
+    startCircle();
+  }); // getCurrentPosition
+} else {
+  userPosition = [40.777225004040009, -73.95218489597806];
+  pos = new google.maps.LatLng(userPosition[0], userPosition[1]); 
+  localStorage.setItem("lat", userPosition[0]);
+  localStorage.setItem("lon", userPosition[1]);
+
+  $scope.map.setCenter(pos);  
+  alert("Your device isn't supporting geolocation - we'll default you to the UWS of NYC, USA.");
+
+  startCircle();
+}
+**/
+
+if ($scope.map!=null) {
+  $scope.$apply(function() {
+    $scope.loadedMap = true;
+  });
+
+  startCircle();
+}
+
+function startCircle() {
+
+      // if ($scope.map != null) {
+       
+        var circleOpts = {
+          //map: $scope.map,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#fff',
+          fillOpacity: 0.35,
+          center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
+          radius: 3000,
+          editable: true,
+          draggable: true
+        };
 
         $scope.circle = new google.maps.Circle(circleOpts); 
         $scope.circle.setMap($scope.map);
-        
+        //$scope.circle.setCenter(pos);
+       
         var newRadius = $scope.circle.getRadius();
         localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+/** already set from map
         var lat = $scope.circle.getCenter().lat();
         var lon = $scope.circle.getCenter().lng();
-        //should be userposition[0] and [1]
         localStorage.setItem('lat', lat);
         localStorage.setItem('lon', lon);
-
+**/
 google.maps.event.addListener($scope.circle, 'radius_changed', function() {
   newRadius = $scope.circle.getRadius();
   $scope.circle.radius = newRadius;
@@ -747,9 +799,9 @@ google.maps.event.addListener($scope.circle, 'dragend', function() {
  // console.log("\n lat: " + localStorage.getItem('lat') + " and lon: " + localStorage.getItem('lon'));
 });
         startGeocomplete();
-  } //map not null
+//} map not null
 
-}, 10); //timeout
+} //startCircle
 
 
 // geocomplete
@@ -790,19 +842,18 @@ function startGeocomplete () {
      });
      google.maps.event.addListener(marker, "click", function (e) { iw.open($scope.map, this); });
 
-    markers.push(marker);
+     markers.push(marker);
 
-      $timeout(function() {
+    $timeout(function() {
         google.maps.event.addListener(marker, 'dblclick', function(){
-           // console.log("clicked markers! " + marker.title);
-            this.setMap(null);    
-                
+          // console.log("clicked markers! " + marker.title);
+          this.setMap(null);                   
         });
 
-      }, 10);
+    }, 10);
       
       
-   }); //bind
+   }); // .bind
 
 } //startGeocomplete
 
@@ -827,11 +878,6 @@ $scope.blurOnEnterAddress = function(keyEvent) {
 
 //google.maps.event.addDomListener(window, 'load', initialize);
 
-/**
-$timeout(function(){
-   initialize();
- }, 1000);
-**/
 })
 
 .controller('CardsCtrl', function($scope, $ionicSwipeCardDelegate, $firebase, DistanceCalc) {
