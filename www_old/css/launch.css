@@ -19,19 +19,32 @@
 **/
 #map-canvas {
 	display: block; 
-	width: 96%; 
+	width: 99%; 
 	height: 350px;
 	border-radius: 5px;
 	margin: 0 auto;
 }
 
-input#address {
+input#google_places_ac {
 	background-color: rgba(0,0,0,0.1);
-	width: 96%;
+	width: 99%;
 	padding: 2px 10px;
 	border-radius: 3px;
 	margin: 0 auto;
 }
+
+#launch-go {
+	/** margin-top: -5px; **/
+	width: 90%;
+	margin: 0 auto;
+	background-color: #FF436C !important;
+	opacity: 1.0 !important;
+	font-family: 'Pacifico', 'Lato';
+	font-size: 1.0rem;
+	padding: 2px 10px;
+	margin-top: 10px;
+}
+
 
 /** form **/
 
@@ -183,13 +196,6 @@ input#address {
 	color: white !important;
 	opacity: 1;
 }
-
-#launch-go {
-	margin-top: -5px;
-	background-color: #FF436C !important;
-	opacity: 1.0 !important;
-}
-
 
 
 /**

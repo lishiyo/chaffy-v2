@@ -1,0 +1,48 @@
+<head>
+  <link href="../css/ion-google-place.css" rel="stylesheet">
+  <link href="../Map-Icons-Master" rel="stylesheet">
+
+  <script src='../js/markerwithlabel_packed.js'></script>
+
+  <style>
+  .scroll {
+  	height: 100%;
+  }
+
+  #map {
+  	width: 100%;
+  	height: 100%;
+  }
+  </style>
+</head>
+<!--
+<ion-header class="bar bar-header bar-calm">
+  <button class="button button-icon" ng-click="goToHome()"><i class="icon ion-home"></i></button>
+  <h1 class="title">chaffy</h1>
+</ion-header>
+-->
+
+<!--<body ng-controller="MapCtrl">-->
+<!--
+    <ion-header-bar class="bar-dark" >
+      <h1 class="title">Map</h1>
+    </ion-header-bar>
+-->
+
+<ion-header-bar>
+<ion-google-place placeholder="enter custom location" ng-model="location" ng-keypress="blurOnEnterAddress($event)"/>
+</ion-header-bar>
+
+<ion-content>
+
+<div id="map" data-tap-disabled="true">
+	
+</div>
+      
+</ion-content>
+
+    <ion-footer-bar class="bar-dark" style="background-color:#6EC3FF; border:none;" id="mapBottomBar">
+      <a ng-click="centerOnMe()" class="button button-icon" id="findChats"><i class="icon ion-ios7-paperplane"></i> get chats</a>
+    </ion-footer-bar>
+  
+  <!--</body>-->

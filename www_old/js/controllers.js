@@ -3,7 +3,7 @@
 //for the map drag interval below for map
 //var cInt;
 
-angular.module('chatRoom.controllers', ['chatRoom.services'])
+angular.module('chatRoom.controllers', ['chatRoom.services', 'OtdDirectives'])
 
 .controller('LoadingCtrl', function($scope, $ionicLoading) {
   connieDrag= false;
@@ -101,9 +101,11 @@ if (localStorage.getItem('localUserID') != null) {
 
   connieDrag= false;
   // real user position
+  /**
   console.log("\n\n $scope.map center is " + userPosition[0] + ", " + userPosition[1]);
   console.log("\n\n $scope.circle radius: " + localStorage.getItem('localNewRadius'));
   console.log("\n\n $scope.circle radius lat: " + localStorage.getItem('lat') + " " + localStorage.getItem('lon'));
+  **/
 
   // set localNewRadius whenever switch view to MainCtrl - below doesn't work, however
   // localStorage.setItem('localNewRadius', (parseFloat(angular.element(document.getElementById('firstElem')).scope().circle.radius) / 1609));
@@ -170,10 +172,10 @@ function allUsersRooms() {
 
   $scope.thisUser.child("myRooms").once("value", function (snapshot) {
     $scope.myRooms = snapshot.val(); //current myRooms
-    //console.log("allUsersRooms ran!");
+    // console.log("allUsersRooms ran!");
  
   }, function (errorObject) {
-    console.log(errorObject);
+    // console.log(errorObject);
   });
 
 } //allUsersRooms
@@ -371,7 +373,7 @@ $scope.roomRef.push().setWithPriority({
 
 this.newMessage = "";
 
-setTimeout(function(){
+$timeout(function(){
   $('#mainInput').trigger('autosize.destroy');
   $('#mainInput').blur();
 }, 10);
@@ -400,7 +402,6 @@ $('#mainInput').focus(function(){
 }) // RoomCtrl
 
 .controller('AboutCtrl', function($scope) {
-
   connieDrag= false;
 })
 
@@ -470,18 +471,24 @@ $('#userAlias').keydown(function(event) {
    //for users who don't input a name
 
 // set localNewRadius when user clicks GO
-    //var newRadius = parseFloat(($scope.circle.radius) / 1609);
-    //localStorage.setItem('localNewRadius', newRadius);
-
-    var newRadius = $scope.circle.getRadius();
-    localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+    
+    if ($scope.circle==null) {
+      var newRadius = 3000;
+      var lat = 40.777225004040009;
+      var lon = -73.95218489597806;
+    } else {
+      var newRadius = $scope.circle.getRadius();
+      var lat = $scope.circle.getCenter().lat();
+      var lon = $scope.circle.getCenter().lng();
+    }
+      
+  localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+  
+  console.log("\n lat: " + localStorage.getItem('lat') + " lon: " + localStorage.getItem('lon'));
 
 // console.log("\n\n\n\n findChats says " + localStorage.getItem('localNewRadius'));
 
 // reset localStorage lat, lon and userPosition to circle center on GO
-
-  var lat = $scope.circle.getCenter().lat();
-  var lon = $scope.circle.getCenter().lng();
 
    // userPosition[0] = parseFloat(lat);
    // userPosition[1] = parseFloat(lon);
@@ -535,10 +542,16 @@ thisUser.update({
 //console.log("\n\n" + "current userID is " + thisUser.name());
 
 //$location.path('/swipe');
+//unbind geocode
+
 $location.path('/home');
 
 }; // findChats()
 
+$scope.$watch('address', function() {
+    //console.log('hey, address has changed!');
+    $('#google_places_ac').bind('geocode:result');
+});
 
 /** Firebase anonymous login
 var myRef = new Firebase("https://blistering-fire-5269.firebaseio.com");
@@ -654,32 +667,46 @@ $scope.map.isReady = true;
 $scope.circle.isReady = true;
 **/
 
+
+$scope.map=null;
+$scope.circle=null;
+$scope.loadedMap = false;
+$scope.address = "";
+//$scope.location = "";
+
+
 document.addEventListener('deviceready', onDeviceReady, false);
 
-function onDeviceReady() {
-   navigator.geolocation.getCurrentPosition(onSuccess, onError);
- }
+function onDeviceReady() { 
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+
+//navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
 
 function onSuccess(position) {
+
   userPosition=[position.coords.latitude, position.coords.longitude];
-  //localStorage.setItem("lat", position.coords.latitude);
-  //localStorage.setItem("lon", position.coords.longitude);
+  localStorage.setItem("lat", userPosition[0]);
+  localStorage.setItem("lon", userPosition[1]);
+
   initializeMap();
 }
 
 function onError(error) {
-  userPosition =[40.777225004040009, -73.95218489597806];
-  alert("geolocation failed! defaulting to: " + userPosition[0] + " " + userPosition[1]);
+  userPosition = [40.777225004040009, -73.95218489597806];
+  localStorage.setItem("lat", userPosition[0]);
+  localStorage.setItem("lon", userPosition[1]);
+
+  alert("Oops, we couldn't get your location! (Try visiting your phone's settings, find this app in Location, and turn it on.)\n Right now we'll default you to the Upper East Side of Manhattan in NYC, USA.");
+
   initializeMap();
 }
-   
-function initializeMap() {
-  var geocoder;
-   var markers = [];
-   $scope.circle = null;
-   $scope.map = null;
   
-    var mapOpts = {
+function initializeMap() {
+  //var geocoder;
+  
+  var mapOpts = {
         zoom: 12,
         zoomControl: true,
         zoomControlOptions: {
@@ -699,39 +726,85 @@ function initializeMap() {
         }
     };
     
-    var circleOpts = {
-      //map: $scope.map,
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#fff',
-      fillOpacity: 0.35,
-      center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
-      radius: 3000,
-      editable: true,
-      draggable: true
-    };
-
+// instantiate map, hide the loading paragraph - mapLoaded now true!
 $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOpts);
-   
-$timeout(function(){
 
-      if ($scope.map!=null) {
-        //google.maps.event.trigger($scope.map, "resize");
+// Try HTML5 geolocation
+/**
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function (position) {
+    userPosition = [position.coords.latitude, position.coords.longitude];
+    pos = new google.maps.LatLng(userPosition[0], userPosition[1]);
+    localStorage.setItem("lat", userPosition[0]);
+    localStorage.setItem("lon", userPosition[1]);
+
+    $scope.map.setCenter(pos); 
+
+    startCircle();
+  }, // error getting current position
+  function() {
+    userPosition = [40.777225004040009, -73.95218489597806];
+    pos = new google.maps.LatLng(userPosition[0], userPosition[1]); 
+    localStorage.setItem("lat", userPosition[0]);
+    localStorage.setItem("lon", userPosition[1]);
+
+    $scope.map.setCenter(pos);
+    alert("Your device supports geolocation, but you have it disabled; please go to your app settings and under Chaffy, enable location. We'll default you to the UWS of NYC, USA.");
+
+    startCircle();
+  }); // getCurrentPosition
+} else {
+  userPosition = [40.777225004040009, -73.95218489597806];
+  pos = new google.maps.LatLng(userPosition[0], userPosition[1]); 
+  localStorage.setItem("lat", userPosition[0]);
+  localStorage.setItem("lon", userPosition[1]);
+
+  $scope.map.setCenter(pos);  
+  alert("Your device isn't supporting geolocation - we'll default you to the UWS of NYC, USA.");
+
+  startCircle();
+}
+**/
+
+if ($scope.map!=null) {
+  $scope.$apply(function() {
+    $scope.loadedMap = true;
+  });
+
+  startCircle();
+}
+
+function startCircle() {
+
+      // if ($scope.map != null) {
+       
+        var circleOpts = {
+          //map: $scope.map,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#fff',
+          fillOpacity: 0.35,
+          center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
+          radius: 3000,
+          editable: true,
+          draggable: true
+        };
 
         $scope.circle = new google.maps.Circle(circleOpts); 
         $scope.circle.setMap($scope.map);
-        
+        //$scope.circle.setCenter(pos);
+       
         var newRadius = $scope.circle.getRadius();
         localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+/** already set from map
         var lat = $scope.circle.getCenter().lat();
         var lon = $scope.circle.getCenter().lng();
-        //should be userposition[0] and [1]
         localStorage.setItem('lat', lat);
         localStorage.setItem('lon', lon);
-
+**/
 google.maps.event.addListener($scope.circle, 'radius_changed', function() {
-  newRadius = $scope.circle.getRadius();
+  var newRadius = $scope.circle.getRadius();
   $scope.circle.radius = newRadius;
   localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
 
@@ -739,41 +812,51 @@ google.maps.event.addListener($scope.circle, 'radius_changed', function() {
 });
 
 google.maps.event.addListener($scope.circle, 'dragend', function() {
-  lat = $scope.circle.getCenter().lat();
-  lon = $scope.circle.getCenter().lng();
+  var lat = $scope.circle.getCenter().lat();
+  var lon = $scope.circle.getCenter().lng();
   localStorage.setItem('lat', lat);
   localStorage.setItem('lon', lon);
   
  // console.log("\n lat: " + localStorage.getItem('lat') + " and lon: " + localStorage.getItem('lon'));
 });
-        startGeocomplete();
-  } //map not null
 
-}, 10); //timeout
+startGeoComplete();
 
+//} map not null
 
-// geocomplete
-function startGeocomplete () {
+} //startCircle
 
-   $("input#address").geocomplete({
-      map: $scope.map
+// geocomplete (original)
+function startGeoComplete() {
+  $("#google_places_ac").val($scope.address);
+
+  //alert("called startGeoComplete with val: " + $("#google_places_ac").val());
+   $("#google_places_ac").unbind('geocode:result');
+
+   $("#google_places_ac").geocomplete({
+      map: $scope.map,
+      autoselect: true
      }).bind("geocode:result", function(event, result){
     
+    $scope.$apply(function() {
+   
      $scope.map.setCenter(result.geometry.location);
      $scope.circle.setCenter(result.geometry.location);
      $scope.map.fitBounds($scope.circle.getBounds());
 
 //store new lat, lon, and radius even without pressing findChats
-     lat = $scope.circle.getCenter().lat();
-     lon = $scope.circle.getCenter().lng();
+     var lat = $scope.circle.getCenter().lat();
+     var lon = $scope.circle.getCenter().lng();
      localStorage.setItem('lat', lat);
      localStorage.setItem('lon', lon);
-     newRadius = $scope.circle.getRadius();
+
+     var newRadius = $scope.circle.getRadius();
      $scope.circle.radius = newRadius;
      localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
   
-
-     var marker = new google.maps.Marker({
+    var id;
+    var markers = {};
+     $scope.marker = new google.maps.Marker({
           map: $scope.map,
           title: result.formatted_address,
           position: result.geometry.location
@@ -785,33 +868,49 @@ function startGeocomplete () {
           **/
       });
 
+     id = $scope.marker.__gm_id;
+     markers[id] = $scope.marker;
+
+      google.maps.event.addListener($scope.marker, 'dblclick', function(){
+          
+          this.setMap(null);
+          $scope.$apply();
+                          
+      });
+
+
+
      var iw = new google.maps.InfoWindow({
-       content: marker.title
+       content: $scope.marker.title
      });
-     google.maps.event.addListener(marker, "click", function (e) { iw.open($scope.map, this); });
 
-    markers.push(marker);
+     google.maps.event.addListener($scope.marker, "click", function (e) { iw.open($scope.map, this); });
 
-      $timeout(function() {
-        google.maps.event.addListener(marker, 'dblclick', function(){
-           // console.log("clicked markers! " + marker.title);
-            this.setMap(null);    
-                
-        });
+     //markers.push($scope.marker);
 
-      }, 10);
-      
-      
-   }); //bind
+     $scope.address = "";
 
+   }); // .bind
+
+
+    });
+
+$scope.address = "";
 } //startGeocomplete
+
 
 $scope.blurOnEnterAddress = function(keyEvent) {
   if (keyEvent.which === 13) {
-    $("input#address").trigger("geocode");
-    $("input#address").blur();
+    //$("#google_places_ac").trigger("geocode");
+    //startGeoComplete();
+    //$("input#address").blur();
+    // var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+    // getPlace(autocomplete);
+    
+    $("#google_places_ac").blur();
   }
 }
+
 /**
  $("input#address").keyup(function (e) {
     if (e.keyCode == 13) {
@@ -827,12 +926,75 @@ $scope.blurOnEnterAddress = function(keyEvent) {
 
 //google.maps.event.addDomListener(window, 'load', initialize);
 
-/**
-$timeout(function(){
-   initialize();
- }, 1000);
-**/
+
+
+// directive
+function startGeoCompleteAng () {
+  console.log("startGeoCompleteAng");
+  var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+
+  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+
+    getPlace(autocomplete);
+
+    });
+
+}
+
+function getPlace(autocomplete) {
+
+              var place = autocomplete.getPlace();
+
+              $scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+              
+              $scope.map.setCenter(place.geometry.location);
+              $scope.circle.setCenter(place.geometry.location);
+              $scope.map.fitBounds($scope.circle.getBounds());
+
+//store new lat, lon, and radius even without pressing findChats
+     var lat = $scope.circle.getCenter().lat();
+     var lon = $scope.circle.getCenter().lng();
+     localStorage.setItem('lat', lat);
+     localStorage.setItem('lon', lon);
+lat
+     var newRadius = $scope.circle.getRadius();
+     $scope.circle.radius = newRadius;
+     localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+  
+  $scope.marker = new google.maps.Marker({
+          map: $scope.map,
+          title: place.formatted_address,
+          position: place.geometry.location
+          /**
+          labelContent: result.formatted_address,
+          labelAnchor: new google.maps.Point(22, 0),
+          labelClass: "labels", // the CSS class for the label
+          labelStyle: {opacity: 0.75}
+          **/
+      });
+
+
+      google.maps.event.addListener($scope.marker, 'dblclick', function(){
+          // console.log("clicked markers! " + marker.title);
+          this.setMap(null);             
+      });
+
+     var iw = new google.maps.InfoWindow({
+       content: $scope.marker.title
+     });
+
+     google.maps.event.addListener($scope.marker, "click", function (e) { iw.open($scope.map, this); });
+
+     markers.push($scope.marker);
+
+     //$("input#address").val("");
+     
+     $scope.$apply();
+}
+
+
 })
+
 
 .controller('CardsCtrl', function($scope, $ionicSwipeCardDelegate, $firebase, DistanceCalc) {
 
@@ -926,10 +1088,10 @@ $scope.actualDistanceFromHere = function (_item, _startPoint) {
     var newCard = chatCards[Math.floor(Math.random() * chatCards.length)];
     //console.log("adding card: " + newCard.title + " chatcards: " + chatCards.length);
     if ($scope.distanceFromHere(newCard) <= $scope.radius) {
-      console.log("pushing card! " + $scope.distanceFromHere(newCard));
+      //console.log("pushing card! " + $scope.distanceFromHere(newCard));
       $scope.chatCards.push(angular.extend({}, newCard));
     } else {
-      console.log("skipping card! " + $scope.distanceFromHere(newCard));
+      //console.log("skipping card! " + $scope.distanceFromHere(newCard));
       $scope.addCard();
     }
     
@@ -948,4 +1110,44 @@ $scope.actualDistanceFromHere = function (_item, _startPoint) {
     var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
     card.swipe();
   };
+});
+
+
+angular.module('OtdDirectives', [])
+.directive('googlePlaces', function(){
+   return {
+    restrict:'E',
+    replace:true,
+    scope: {location:'='},
+    template: '<input id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/>',
+    link: function($scope, elm, attrs){
+      /**
+            var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+
+              var place = autocomplete.getPlace();
+
+              $scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+              
+              $scope.map.setCenter(place.geometry.location);
+              $scope.circle.setCenter(place.geometry.location);
+              $scope.map.fitBounds($scope.circle.getBounds());
+
+//store new lat, lon, and radius even without pressing findChats
+     var lat = $scope.circle.getCenter().lat();
+     var lon = $scope.circle.getCenter().lng();
+     localStorage.setItem('lat', lat);
+     localStorage.setItem('lon', lon);
+
+     var newRadius = $scope.circle.getRadius();
+     $scope.circle.radius = newRadius;
+     localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
+  
+
+              $scope.$apply();
+            });
+**/
+         } //link
+    } //return
 });

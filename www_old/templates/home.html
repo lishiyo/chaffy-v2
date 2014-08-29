@@ -1,19 +1,23 @@
-<nav-page id="app-page">
-  <!-- where the content of each page will be rendered -->
+<!--<nav-page id="app-page" animation="slide-left-right">
+  -->
   <header class="bar bar-header bar-calm">
     <button class="button button-icon" ng-click="toggleSideMenu()"><i class="icon ion-navicon"></i></button>
     <h1 class="title">chaffy</h1>
     <button class="button button-icon" ng-click="goToNewRoomDirect()"><i class="icon ion-plus"></i></button>
   </header>
+
+  <!--</nav-page>-->
+
   <content
     has-header="true"
-    has-footer="true"
-    has-tabs="true"
+    has-footer="false"
+    has-tabs="false"
     scroll="true"
     padding="true"
     on-refresh="onRefresh()"
     animate-nav="true"
-    >
+    id="app-page"
+  >
 
     <!-- for pull to refresh -->
     <refresher pulling-text="Pull to refresh..."></refresher>
@@ -38,4 +42,3 @@
       </link-item>
     </list>
   </content>
-</nav-page>

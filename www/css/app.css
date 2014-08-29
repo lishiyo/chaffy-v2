@@ -76,6 +76,7 @@
   border-radius: 3px;
   margin-bottom: 4px;
   opacity: 0.9;
+  padding-bottom: 35px !important;
 }
 
 .list .item h3{
@@ -112,13 +113,14 @@
 
 textarea#mainInput {
   background-color: white !important;
+  border: 0px solid white;
   border-radius: 5px;
   padding: 2px 5px;
   display: inline-block;
 }
 
 #leftTextarea{
-  width: 78%;
+  width: 80%;
   display: inline-block;
   float:left;
 }
@@ -132,7 +134,7 @@ div#msgBar.list{
   width: 100%;
   display: inline-block;
   overflow: hidden;
-  padding: 8px;
+  padding: 5px;
   margin-bottom: 0px;
 }
 
@@ -143,10 +145,10 @@ div#bar-footer-message-box{
 
 #sendBtn {
   float: right;
-  width: 20%;
-  height: 43px;
-  margin-top: 0px;
-  margin-right: 5px;
+  width: 16%;
+  height: 40px;
+  margin-top: 1px;
+  margin-right: 10px;
 }
 
 input.convoInput{

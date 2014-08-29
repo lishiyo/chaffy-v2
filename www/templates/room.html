@@ -1,16 +1,13 @@
-<!--
+
 <nav-bar animation="nav-title-slide-ios7" class="nav-title-slide-ios7" type="bar-calm" back-button-type="button-icon" back-button-icon="icon ion-arrow-left-c">
--->
-<nav-bar animation="nav-title-slide" class="nav-title-slide" type="bar-calm" back-button-type="button-icon" back-button-icon="icon ion-arrow-left-c">
 </nav-bar>
 
-<!--
 <nav-page title="{{room.title}}">
--->
+
 <style>
 
   .has-footer{
-    bottom: 60px  !important;
+    bottom: 100px !important;
   }
 
 </style>
@@ -28,7 +25,7 @@
     animate-nav="true"
     delegate-handle="myScroll"
     id="mainScroll"
-    > 
+    > <!--delegate-handle="myScroll", scroll="true"-->
 
     <!-- for pull to refresh -->
     <refresher></refresher>
@@ -59,13 +56,13 @@
       <form ui-keypress="{13:'submitAddMessage($event)'}" data-ng-submit="submitAddMessage()" >
       <div id="leftTextarea">
         <!--<label class="item item-input" id="msgLabel">-->
-          <textarea placeholder="your message ..." data-ng-model="newMessage" id="mainInput" style="padding-bottom:0px;"></textarea>  
+          <textarea placeholder="your message ..." data-ng-model="newMessage" id="mainInput" row="1" style="padding-bottom:0px;"></textarea>  
           </div>     
         <!--</label>-->
-        <button class="button button-positive" id="sendBtn">send</button>
+        <button class="button button-positive" id="sendBtn">Send</button>
       </form>
     </div>  
     <!--</div>-->
     
   </div>
-<!--</nav-page>-->
+</nav-page>
