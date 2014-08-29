@@ -1,9 +1,21 @@
 <head>
   <link href="css/launch.css" rel="stylesheet">
-  <script src='../js/markerwithlabel_packed.js'></script>
+  <script src='js/markerwithlabel_packed.js'></script>
+  <style>
+    .form-bar{
+      margin-bottom: 4px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .has-header{
+      top: 34px;
+    }
+  </style>
 </head>
 
-<header class="bar bar-header bar-calm">
+<header class="bar bar-header bar-calm" style="margin-bottom: 0px;">
   <button class="button button-icon" ng-click="goToHome()"><i class="icon ion-home"></i></button>
   <h1 class="title">chaffy</h1>
 </header>
@@ -11,6 +23,9 @@
 <content has-header="true" id="firstElem">        
   <!-- <form ng-submit="doNothing()"> form ui-keypress="{13:'findChats()'}" -->
 <div class="list list-inset">
+
+<google-places location=location ng-keypress="blurOnEnterAddress($event)" ng-model="address" style="width:80%; float:left;"></google-places>
+<button class="button button-positive" ng-click="searchGeocomplete()" id="launch-geocomplete">search</button>
 
 <div class="form-bar" id="username-bar">
     <input type="text" ng-model="userPro.username" class="convoInput" id="userAlias" placeholder="my alias" ng-keypress="blurOnEnter($event)">
@@ -80,12 +95,6 @@
 <!--
   <input id="address" type="text" ng-keypress="blurOnEnterAddress($event)" ng-model="address">
   -->
-<google-places location=location ng-keypress="blurOnEnterAddress($event)" ng-model="address"></google-places>
-
-  <div class="padding" style="padding-top:0px;">
-      <button class="button button-full button-positive" ng-click="findChats()" id="launch-go">find chats</button>
-  </div>
-
   <div id="loadingMap" style="margin: 0 auto; text-align: center; padding-top: 20px;" ng-hide="loadedMap">
     <p style="font-size: 0.8rem; font-style: italic; opacity: 0.8;"> loading map...
     </p>
@@ -98,6 +107,12 @@
      center="{{center()}}" radius="3000" editable="true" fillColor: '#fff'></shape>
      -->
   </div>
+
+
+  <div class="padding" style="width:100%; padding-top:0px; padding-left: 0px; padding-right: 0px;">
+      <button class="button button-full button-positive" ng-click="findChats()" id="launch-go">find chats</button>
+  </div>
+
   
 <!--
 <div id="map-container" ng-click="blurKeyboard()">

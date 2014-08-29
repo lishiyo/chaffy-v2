@@ -548,10 +548,6 @@ $location.path('/home');
 
 }; // findChats()
 
-$scope.$watch('address', function() {
-    //console.log('hey, address has changed!');
-    $('#google_places_ac').bind('geocode:result');
-});
 
 /** Firebase anonymous login
 var myRef = new Firebase("https://blistering-fire-5269.firebaseio.com");
@@ -830,7 +826,7 @@ startGeoComplete();
 function startGeoComplete() {
   $("#google_places_ac").val($scope.address);
 
-  alert("called startGeoComplete with val: " + $("#google_places_ac").val());
+  //alert("called startGeoComplete with val: " + $("#google_places_ac").val());
    $("#google_places_ac").unbind('geocode:result');
 
    $("#google_places_ac").geocomplete({
@@ -854,10 +850,8 @@ function startGeoComplete() {
      $scope.circle.radius = newRadius;
      localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
   
-var id;
-var markers = {};
-
-
+    var id;
+    var markers = {};
      $scope.marker = new google.maps.Marker({
           map: $scope.map,
           title: result.formatted_address,
@@ -890,7 +884,7 @@ var markers = {};
 
      //markers.push($scope.marker);
 
-     $scope.address = "";
+     $("#google_places_ac").val("");
 
    }); // .bind
 
@@ -900,14 +894,23 @@ var markers = {};
 $scope.address = "";
 } //startGeocomplete
 
+$scope.searchGeocomplete = function() {
+
+  $("#google_places_ac").trigger("geocode");
+}
+
 
 $scope.blurOnEnterAddress = function(keyEvent) {
   if (keyEvent.which === 13) {
+    keyEvent.preventDefault();
+    //$("#google_places_ac").val($scope.address);
     //$("#google_places_ac").trigger("geocode");
     //startGeoComplete();
     //$("input#address").blur();
     // var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
     // getPlace(autocomplete);
+    $scope.address = $("#google_places_ac").val();
+    $("#google_places_ac").geocomplete("find", $scope.address);
     
     $("#google_places_ac").blur();
   }

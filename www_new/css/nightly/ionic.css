@@ -2735,6 +2735,10 @@ a.subdued {
   border-top: 1px solid transparent;
   border-bottom: 1px solid #ddd;
   background-color: white;
+  /** connie
+  padding-top:10px;
+  **/
+  padding-top: 5px;
   /* border-width: 1px will actually create 2 device pixels on retina */
   /* this nifty trick sets an actual 1px border on hi-res displays */
   background-size: 0; }

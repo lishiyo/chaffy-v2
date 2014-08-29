@@ -19,18 +19,47 @@
 **/
 #map-canvas {
 	display: block; 
-	width: 96%; 
+	width: 99%; 
 	height: 350px;
 	border-radius: 5px;
 	margin: 0 auto;
+	margin-top: -4px;
 }
 
-input#address {
+input#google_places_ac {
 	background-color: rgba(0,0,0,0.1);
-	width: 96%;
+	width: 99%;
 	padding: 2px 10px;
 	border-radius: 3px;
 	margin: 0 auto;
+}
+
+#launch-go {
+	/** margin-top: -5px; **/
+	width: 100%;
+	height: 40px;
+	margin: 0 auto;
+	background-color: #FF436C !important;
+	/**opacity: 1.0 !important;**/
+	font-family: 'Pacifico', 'Lato';
+	font-size: 1.0rem;
+	padding: 2px 10px;
+	top: 10px !important;
+	margin-bottom: 10px;
+	line-height: 1rem;
+}
+
+#launch-geocomplete{
+	width:19%; 
+	float:right; 
+	min-height:34px !important; 
+	height: 34px;
+	padding: 2px 10px !important; 
+	line-height:20px;
+	font-size: 0.8rem;
+	background-color: orange;
+	border-radius: 4px;
+	border: 1px solid orange;
 }
 
 /** form **/
@@ -54,18 +83,15 @@ input#address {
 	margin-left: auto;
 	margin-right: auto;
 }
-/**
+
 #username-bar {
-	width: 100%;
-	padding: 1px;
-	border-radius: 0px;
-	background-color: rgba(253, 225, 15, 0.7);
-	background-color: rgba(0,0,0, 0.5);
+	padding: 25px 0px 0px 0px !important;
+	margin-top: 20px;
 }
-**/
+
 #userAlias {
-	width: 100%;
-	height: 45px;
+	width: 99%;
+	height: 34px;
 	text-align: center;
 	margin: 0 auto;
 	font-family: 'Lato', 'Pacifico', Arial, sans-serif;
@@ -74,9 +100,9 @@ input#address {
 	border: 1px solid #D6D6D6;
 	color: gray;
 	**/
-
 	background-color: rgba(164,164,164, 1);
 	color: white;
+	top: 20px !important;
 }
 
 #userAlias::-webkit-input-placeholder {
@@ -89,12 +115,6 @@ input#address {
 	padding-top: 7px;
 }
 
-.form-bar {
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	margin-bottom: 10px;
-}
 
 .bar-gender-item {
 	display:inline-block;
@@ -102,7 +122,9 @@ input#address {
 	border: 1px solid #dddddd !important;
 	/** font-family: 'Pacifico', Arial, sans-serif; **/
 	font-family: 'Lato', 'Pacifico', Arial, sans-serif;
-	height: 45px;
+	line-height: 1rem;
+	font-size: 0.9rem;
+	height: 34px;
 }
 
 .bar-gender-item:nth-last-child(1) {
@@ -160,10 +182,12 @@ input#address {
 **/
 .bar-age-item {
 	display:inline-block;
-	width: 32%;
+	width: 32.5%;
 	border: 1px solid #dddddd !important;
 	margin-top: -10px;
-	height: 45px;
+	height: 34px;
+	line-height: 0.8rem;
+	font-size: 0.8rem;
 }
 
 .bar-age-item .item-content{
@@ -183,13 +207,6 @@ input#address {
 	color: white !important;
 	opacity: 1;
 }
-
-#launch-go {
-	margin-top: -5px;
-	background-color: #FF436C !important;
-	opacity: 1.0 !important;
-}
-
 
 
 /**
