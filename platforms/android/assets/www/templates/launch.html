@@ -3,14 +3,22 @@
   <script src='js/markerwithlabel_packed.js'></script>
   <style>
     .form-bar{
-      margin-bottom: 4px;
+      margin-bottom: 1px;
       margin-left: auto;
       margin-right: auto;
       text-align: center;
+      z-index: -99999;
+      border-radius: 0px;
+      height: 34px;
     }
 
     .has-header{
-      top: 34px;
+      top: 24px;
+    }
+
+    div.list.list-inset{
+      margin-left:0px;
+      margin-right:0px;
     }
   </style>
 </head>
@@ -20,12 +28,26 @@
   <h1 class="title">chaffy</h1>
 </header>
 
-<content has-header="true" id="firstElem">        
+<content has-header="true" has-bottom="true" has-tabs="false" id="firstElem">        
   <!-- <form ng-submit="doNothing()"> form ui-keypress="{13:'findChats()'}" -->
 <div class="list list-inset">
 
-<google-places location=location ng-keypress="blurOnEnterAddress($event)" ng-model="address" style="width:80%; float:left;"></google-places>
+<google-places location=location ng-model="address" style="float:left; z-index:100; width:100%;" ng-keypress="blurOnEnterAddress($event)"></google-places>
+<!--
 <button class="button button-positive" ng-click="searchGeocomplete()" id="launch-geocomplete">search</button>
+-->
+ <div id="loadingMap" ng-hide="loadedMap">
+    <p style="font-size: 0.8rem; font-style: italic; opacity: 0.8;"> loading map...
+    </p>
+    <p><i class="icon ion-loading-d" style="font-size: 4rem; opacity: 0.5;"></i></p>
+  </div>
+ 
+  <div id="map-canvas" style="z-index: 0;">
+  <!--
+     <shape id="myCircle" name="circle" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" geoFallbackCenter="[40.777225004040009, -73.95218489597806]" 
+     center="{{center()}}" radius="3000" editable="true" fillColor: '#fff'></shape>
+     -->
+  </div>
 
 <div class="form-bar" id="username-bar">
     <input type="text" ng-model="userPro.username" class="convoInput" id="userAlias" placeholder="my alias" ng-keypress="blurOnEnter($event)">
@@ -58,6 +80,7 @@
 </label>
 -->
 </div>
+
 
 <div class="form-bar">
       <label class="item item-radio bar-age-item" id="radio-age-0">
@@ -95,25 +118,7 @@
 <!--
   <input id="address" type="text" ng-keypress="blurOnEnterAddress($event)" ng-model="address">
   -->
-  <div id="loadingMap" style="margin: 0 auto; text-align: center; padding-top: 20px;" ng-hide="loadedMap">
-    <p style="font-size: 0.8rem; font-style: italic; opacity: 0.8;"> loading map...
-    </p>
-    <p><i class="icon ion-loading-d" style="font-size: 4rem; opacity: 0.5;"></i></p>
-  </div>
  
-  <div id="map-canvas">
-  <!--
-     <shape id="myCircle" name="circle" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" geoFallbackCenter="[40.777225004040009, -73.95218489597806]" 
-     center="{{center()}}" radius="3000" editable="true" fillColor: '#fff'></shape>
-     -->
-  </div>
-
-
-  <div class="padding" style="width:100%; padding-top:0px; padding-left: 0px; padding-right: 0px;">
-      <button class="button button-full button-positive" ng-click="findChats()" id="launch-go">find chats</button>
-  </div>
-
-  
 <!--
 <div id="map-container" ng-click="blurKeyboard()">
 <div ng-if="map.isReady && circle.isReady">
@@ -126,4 +131,14 @@
     </div>
     
   <!--</form>-->
+<!--
+  <div style="width:100%; padding-top:0px; padding-left: 0px; padding-right: 0px;">
+      <button class="button button-full button-positive" ng-click="findChats()" id="launch-go">find chats</button>
+  </div>
+-->
+  
 </content>
+
+<div class="bar bar-footer bar-stable" id="bar-footer-message-box" style="height:65px;">
+<button class="button button-full button-positive" ng-click="findChats()" id="launch-go">find chats</button>
+</div>

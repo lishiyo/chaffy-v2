@@ -677,7 +677,7 @@ function onDeviceReady() {
   navigator.geolocation.getCurrentPosition(onSuccess, onError);
 }
 
-//navigator.geolocation.getCurrentPosition(onSuccess, onError);
+navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
 
 function onSuccess(position) {
@@ -709,22 +709,30 @@ function initializeMap() {
           style: google.maps.ZoomControlStyle.LARGE,
           position: google.maps.ControlPosition.LEFT_CENTER
         },
-        center: new google.maps.LatLng(userPosition[0], userPosition[1]),
+        center: new google.maps.LatLng(userPosition[0], userPosition[1])
+        /**
         panControl: true,
         panControlOptions: {
           position: google.maps.ControlPosition.TOP_RIGHT
         },
-        scaleControl: true,
+        scaleControl: true
+        
         overviewMapControl: true,
         overviewMapControlOptions: {
           opened: true,
           position: google.maps.ControlPosition.RIGHT_BOTTOM
         }
+        **/
     };
     
 // instantiate map, hide the loading paragraph - mapLoaded now true!
 $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOpts);
-
+/**
+$('#google_places_ac').geocomplete({
+  map: "#map-canvas",
+  mapOptions: mapOpts
+})
+**/
 // Try HTML5 geolocation
 /**
 if (navigator.geolocation) {
@@ -776,10 +784,10 @@ function startCircle() {
        
         var circleOpts = {
           //map: $scope.map,
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
+          strokeColor: '#6EC3FF',
+          strokeOpacity: 0.35,
           strokeWeight: 2,
-          fillColor: '#fff',
+          fillColor: '#6EC3FF',
           fillOpacity: 0.35,
           center: new google.maps.LatLng(userPosition[0], userPosition[1]),         
           radius: 3000,
@@ -831,11 +839,14 @@ function startGeoComplete() {
 
    $("#google_places_ac").geocomplete({
       map: $scope.map,
-      autoselect: true
+      autoselect: false,
+      markerOptions: {
+        disabled: true
+      }
      }).bind("geocode:result", function(event, result){
     
-    $scope.$apply(function() {
-   
+    //$scope.$apply(function() {
+    
      $scope.map.setCenter(result.geometry.location);
      $scope.circle.setCenter(result.geometry.location);
      $scope.map.fitBounds($scope.circle.getBounds());
@@ -850,12 +861,13 @@ function startGeoComplete() {
      $scope.circle.radius = newRadius;
      localStorage.setItem('localNewRadius', (parseFloat(newRadius / 1609)));
   
-    var id;
-    var markers = {};
+    //var id;
+    //var markers = {};
      $scope.marker = new google.maps.Marker({
           map: $scope.map,
           title: result.formatted_address,
-          position: result.geometry.location
+          position: result.geometry.location,
+          icon: 'http://i.imgur.com/Gwss3fJ.png'
           /**
           labelContent: result.formatted_address,
           labelAnchor: new google.maps.Point(22, 0),
@@ -864,14 +876,12 @@ function startGeoComplete() {
           **/
       });
 
-     id = $scope.marker.__gm_id;
-     markers[id] = $scope.marker;
+     //id = $scope.marker.__gm_id;
+     //markers[id] = $scope.marker;
 
       google.maps.event.addListener($scope.marker, 'dblclick', function(){
-          
           this.setMap(null);
-          $scope.$apply();
-                          
+          $scope.$apply();                         
       });
 
 
@@ -880,16 +890,18 @@ function startGeoComplete() {
        content: $scope.marker.title
      });
 
-     google.maps.event.addListener($scope.marker, "click", function (e) { iw.open($scope.map, this); });
+     google.maps.event.addListener($scope.marker, "click", function (e) { 
+      iw.open($scope.map, this); 
+    });
 
      //markers.push($scope.marker);
 
-     $("#google_places_ac").val("");
+     $("#google_places_ac").val(result.formatted_address);
 
-   }); // .bind
+  // }); 
 
 
-    });
+    });// .bind
 
 $scope.address = "";
 } //startGeocomplete
@@ -902,16 +914,14 @@ $scope.searchGeocomplete = function() {
 
 $scope.blurOnEnterAddress = function(keyEvent) {
   if (keyEvent.which === 13) {
-    keyEvent.preventDefault();
+    
     //$("#google_places_ac").val($scope.address);
     //$("#google_places_ac").trigger("geocode");
     //startGeoComplete();
     //$("input#address").blur();
     // var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
     // getPlace(autocomplete);
-    $scope.address = $("#google_places_ac").val();
-    $("#google_places_ac").geocomplete("find", $scope.address);
-    
+   $scope.searchGeocomplete();
     $("#google_places_ac").blur();
   }
 }

@@ -17,50 +17,63 @@
 	background-color: rgba(233, 225, 131, 0.6);
 }
 **/
+
+#loadingMap {
+	position: fixed;
+	text-align: center;
+	padding-top: 20px;
+	left: 50% !important;
+	margin: 0 0 0 -37.5% !important;
+	width: 75%;
+}
+
 #map-canvas {
 	display: block; 
-	width: 99%; 
-	height: 350px;
-	border-radius: 5px;
+	width: 100%; 
+	height: 360px;
+	border-radius: 0px;
 	margin: 0 auto;
-	margin-top: -4px;
+	margin-top: 0px !important;
 }
 
 input#google_places_ac {
 	background-color: rgba(0,0,0,0.1);
-	width: 99%;
+	width: 75%;
 	padding: 2px 10px;
-	border-radius: 3px;
+	border-radius: 0px;
 	margin: 0 auto;
+}
+
+#launch-geocomplete{
+	width:25%; 
+	min-height:34px !important; 
+	height: 34px;
+	padding: 2px 10px !important; 
+	font-family: 'Lato', 'Pacifico';
+	line-height: 18px;
+	font-size: 1rem;
+	background-color: #FF2465;
+	border-radius: 0px;
+	border: 1px solid #FF2465;
+	position: relative;
 }
 
 #launch-go {
 	/** margin-top: -5px; **/
 	width: 100%;
-	height: 40px;
+	height: 100%;
 	margin: 0 auto;
-	background-color: #FF436C !important;
+	background-color: #43cee6 !important;
+	background-color: #FF2465 !important;
 	/**opacity: 1.0 !important;**/
 	font-family: 'Pacifico', 'Lato';
-	font-size: 1.0rem;
+	font-size: 1.2rem;
 	padding: 2px 10px;
-	top: 10px !important;
-	margin-bottom: 10px;
 	line-height: 1rem;
+	border: 0px !important;
+	bottom: 0px;
 }
 
-#launch-geocomplete{
-	width:19%; 
-	float:right; 
-	min-height:34px !important; 
-	height: 34px;
-	padding: 2px 10px !important; 
-	line-height:20px;
-	font-size: 0.8rem;
-	background-color: orange;
-	border-radius: 4px;
-	border: 1px solid orange;
-}
 
 /** form **/
 
@@ -85,16 +98,17 @@ input#google_places_ac {
 }
 
 #username-bar {
-	padding: 25px 0px 0px 0px !important;
-	margin-top: 20px;
+	padding: 0px 0px 0px 0px !important;
+	margin-top: 1px;
 }
 
 #userAlias {
-	width: 99%;
+	width: 100%;
 	height: 34px;
 	text-align: center;
 	margin: 0 auto;
 	font-family: 'Lato', 'Pacifico', Arial, sans-serif;
+	border-radius: 0px;
 	/**
 	background-color: white;
 	border: 1px solid #D6D6D6;
@@ -102,7 +116,7 @@ input#google_places_ac {
 	**/
 	background-color: rgba(164,164,164, 1);
 	color: white;
-	top: 20px !important;
+	top: 0px !important;
 }
 
 #userAlias::-webkit-input-placeholder {
@@ -118,17 +132,27 @@ input#google_places_ac {
 
 .bar-gender-item {
 	display:inline-block;
-	width: 49%;
+	width: 50%;
+	width: calc(99.2% / 2);
 	border: 1px solid #dddddd !important;
+	border-radius: 0px !important;
+	/**
+	border-top: 0px !important;
+	border-bottom: 0px !important;
 	/** font-family: 'Pacifico', Arial, sans-serif; **/
 	font-family: 'Lato', 'Pacifico', Arial, sans-serif;
 	line-height: 1rem;
 	font-size: 0.9rem;
 	height: 34px;
+	margin: 0px !important;
+	margin-bottom: 0 !important;
 }
 
 .bar-gender-item:nth-last-child(1) {
-	margin-bottom: 4px !important;
+	margin-bottom: 0px;
+	border-radius: 0px !important;
+	border-top: 0px !important;
+	border-bottom: 0px !important;
 }
 
 .list .item[id="radio-male"] {
@@ -180,24 +204,30 @@ input#google_places_ac {
 	color: white !important;
 }
 **/
+
 .bar-age-item {
 	display:inline-block;
-	width: 32.5%;
+	width: calc(98.4% / 3);
 	border: 1px solid #dddddd !important;
-	margin-top: -10px;
+	margin-top: 0px !important;
 	height: 34px;
 	line-height: 0.8rem;
 	font-size: 0.8rem;
+	border-radius: 0px !important;
+	margin-bottom: 0px !important;
+	
 }
 
 .bar-age-item .item-content{
 	padding-top: 10px;
+	
 }
+/**
 
 .bar-age-item:nth-last-child(1) {
 	margin-bottom: 4px !important;
 }
-
+**/
 #radio-age-0 input:checked ~ .item-content{
 	color: white !important;
 	opacity: 1;
