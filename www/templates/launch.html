@@ -28,20 +28,21 @@
   <h1 class="title">chaffy</h1>
 </header>
 
-<content has-header="true" has-bottom="true" has-tabs="false" id="firstElem">        
+<content has-header="true" has-bottom="false" has-tabs="false" id="firstElem">        
   <!-- <form ng-submit="doNothing()"> form ui-keypress="{13:'findChats()'}" -->
 <div class="list list-inset">
 
-<google-places location=location ng-model="address" style="float:left; z-index:100; width:100%;" ng-keypress="blurOnEnterAddress($event)"></google-places>
+<google-places location=location ng-model="address" ng-keypress="blurOnEnterAddress($event)"></google-places>
 <!--
 <button class="button button-positive" ng-click="searchGeocomplete()" id="launch-geocomplete">search</button>
--->
+
  <div id="loadingMap" ng-hide="loadedMap">
     <p style="font-size: 0.8rem; font-style: italic; opacity: 0.8;"> loading map...
     </p>
     <p><i class="icon ion-loading-d" style="font-size: 4rem; opacity: 0.5;"></i></p>
   </div>
- 
+	<div style="height:34px;">" "</div>
+ -->
   <div id="map-canvas" style="z-index: 0;">
   <!--
      <shape id="myCircle" name="circle" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" geoFallbackCenter="[40.777225004040009, -73.95218489597806]" 

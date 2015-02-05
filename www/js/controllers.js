@@ -672,11 +672,11 @@ $scope.address = "";
 
 
 document.addEventListener('deviceready', onDeviceReady, false);
-
+/**
 function onDeviceReady() { 
   navigator.geolocation.getCurrentPosition(onSuccess, onError);
 }
-
+**/
 navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
 
@@ -897,6 +897,13 @@ function startGeoComplete() {
      //markers.push($scope.marker);
 
      $("#google_places_ac").val(result.formatted_address);
+		 
+		 $timeout(function() {
+			 $("#google_places_ac").focus(function(){
+				 $(this).val("");
+			 });
+		 }, 10);
+
 
   // }); 
 
